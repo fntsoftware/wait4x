@@ -1,6 +1,6 @@
 module wait4x.dev/v3
 
-go 1.24.0
+go 1.25
 
 require (
 	github.com/antchfx/htmlquery v1.3.4
