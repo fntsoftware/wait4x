@@ -40,7 +40,7 @@ func (s *TestSuite) TestCheckExistenceAAAA() {
 // TestCorrectAAAA tests that the AAAA DNS checker correctly checks for the
 // existence of the expected AAAA record for the given server.
 func (s *TestSuite) TestCorrectAAAA() {
-	d := New(server, WithExpectedIPV6s([]string{"2606:4700:3034::6815:591"}))
+	d := New(server, WithExpectedIPV6s([]string{"2606:4700:10::ac42:9ff6"}))
 	s.Assert().Nil(d.Check(context.Background()))
 }
 
@@ -55,7 +55,7 @@ func (s *TestSuite) TestIncorrectAAAA() {
 // TestCustomNSCorrectAAAA tests that the AAAA DNS checker correctly checks for the
 // existence of the expected AAAA record for the given server using a custom name server.
 func (s *TestSuite) TestCustomNSCorrectAAAA() {
-	d := New(server, WithNameServer("8.8.8.8:53"), WithExpectedIPV6s([]string{"2606:4700:3034::6815:591"}))
+	d := New(server, WithNameServer("8.8.8.8:53"), WithExpectedIPV6s([]string{"2606:4700:10::ac42:9ff6"}))
 	s.Assert().Nil(d.Check(context.Background()))
 }
 
