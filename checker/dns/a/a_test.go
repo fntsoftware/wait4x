@@ -39,7 +39,7 @@ func (s *TestSuite) TestCheckExistenceA() {
 
 // TestCorrectA tests that the A checker correctly checks for the existence of an A record with the expected IP addresses.
 func (s *TestSuite) TestCorrectA() {
-	d := New(server, WithExpectedIPV4s([]string{"172.67.154.180", "127.0.0.1"}))
+	d := New(server, WithExpectedIPV4s([]string{"172.66.159.246", "127.0.0.1"}))
 	s.Assert().Nil(d.Check(context.Background()))
 }
 
@@ -53,7 +53,7 @@ func (s *TestSuite) TestIncorrectA() {
 // TestCustomNSCorrectA tests that the A checker correctly checks for the existence of an A record
 // with the expected IP addresses using a custom name server.
 func (s *TestSuite) TestCustomNSCorrectA() {
-	d := New(server, WithNameServer("8.8.8.8:53"), WithExpectedIPV4s([]string{"172.67.154.180"}))
+	d := New(server, WithNameServer("8.8.8.8:53"), WithExpectedIPV4s([]string{"172.66.159.246"}))
 	s.Assert().Nil(d.Check(context.Background()))
 }
 
