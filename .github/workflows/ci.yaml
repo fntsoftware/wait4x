@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'main'
+      - 'fnt'
       - 'release/*'
     tags:
       - 'v*'
@@ -85,12 +86,10 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          # Maintaining "atkrad/wait4x" for backward compatibility
-          # Note: This will be removed in v4.0.0. Please use the "wait4x/wait4x" image going forward.
-          images: | 
-            atkrad/wait4x
-            wait4x/wait4x
+          images: |
             ghcr.io/${{ github.repository }}
+          # atkrad/wait4x
+          # wait4x/wait4x
           ### versioning strategy
           ### push semver tag v3.2.1 on the default branch
           # wait4x/wait4x:2.2.0
@@ -121,12 +120,12 @@ jobs:
             [worker.oci]
               max-parallelism = 10
 
-      - name: Login to Docker Hub (docker.io)
-        if: ${{ github.event_name != 'pull_request' }}
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # - name: Login to Docker Hub (docker.io)
+      #   if: ${{ github.event_name != 'pull_request' }}
+      #   uses: docker/login-action@v3
+      #   with:
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Login to GitHub Container Registry (ghcr.io)
         if: ${{ github.event_name != 'pull_request' }}
