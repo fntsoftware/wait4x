@@ -1,6 +1,6 @@
 module wait4x.dev/v3
 
-go 1.25
+go 1.25.0
 
 require (
 	github.com/antchfx/htmlquery v1.3.4
@@ -29,7 +29,7 @@ require (
 	go.mongodb.org/mongo-driver v1.17.4
 	go.temporal.io/api v1.51.0
 	google.golang.org/grpc v1.79.3
-	mvdan.cc/sh/v3 v3.12.0
+	mvdan.cc/sh/v3 v3.13.0
 )
 
 require (
@@ -117,6 +117,6 @@ require (
 	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 // indirect
 	github.com/golang/snappy v1.0.0 // indirect
 	golang.org/x/net v0.48.0
-	golang.org/x/sys v0.39.0 // indirect
+	golang.org/x/sys v0.42.0 // indirect
 	golang.org/x/text v0.32.0 // indirect
 )
