@@ -44,8 +44,8 @@ RUN --mount=from=binary,target=/build \
 FROM scratch AS artifact
 COPY --from=releaser /out /
 
-FROM alpine:3.23.3
-RUN apk add --update --no-cache ca-certificates tzdata zlib=1.3.2-r0 && \
+FROM alpine:3.23.4
+RUN apk add --update --no-cache ca-certificates tzdata && \
     addgroup -g 1001 -S wait4x && \
     adduser -S -s /bin/sh -G wait4x -u 10000 wait4x
 
