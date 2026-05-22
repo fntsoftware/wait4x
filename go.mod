@@ -117,7 +117,7 @@ require (
 	github.com/fatih/color v1.19.0
 	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 // indirect
 	github.com/golang/snappy v1.0.0 // indirect
-	golang.org/x/net v0.54.1-0.20260508232935-23ee2efe81a3
-	golang.org/x/sys v0.44.0 // indirect
+	golang.org/x/net v0.55.0
+	golang.org/x/sys v0.45.0 // indirect
 	golang.org/x/text v0.37.0 // indirect
 )
