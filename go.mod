@@ -27,7 +27,7 @@ require (
 	github.com/tidwall/gjson v1.18.0
 	github.com/tonglil/buflogr v1.1.1
 	go.mongodb.org/mongo-driver v1.17.9
-	go.temporal.io/api v1.62.11
+	go.temporal.io/api v1.62.13
 	google.golang.org/grpc v1.80.0
 	mvdan.cc/sh/v3 v3.13.1
 )
@@ -77,6 +77,7 @@ require (
 	github.com/moby/term v0.5.2 // indirect
 	github.com/montanaflynn/stats v0.9.0 // indirect
 	github.com/morikuni/aec v1.0.0 // indirect
+	github.com/nexus-rpc/nexus-proto-annotations v0.1.0 // indirect
 	github.com/oapi-codegen/runtime v1.4.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.1 // indirect
