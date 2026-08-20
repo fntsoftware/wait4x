@@ -6,7 +6,7 @@ ARG BASE_VARIANT=alpine
 
 FROM --platform=$BUILDPLATFORM tonistiigi/xx:1.9.0@sha256:c64defb9ed5a91eacb37f96ccc3d4cd72521c4bd18d5442905b95e2226b0e707 AS xx
 
-FROM --platform=$BUILDPLATFORM golang:1.27.1-alpine3.24@sha256:8a5910f31396cd4d89662f56c68b3ae31d374308270a1c3bd96672ee5ed43414 AS base
+FROM --platform=$BUILDPLATFORM golang:1.27.2-alpine3.24@sha256:f92b6ef800e499660581efdabdf25d9d817a9d124eaf900924f0504e7e27e12d AS base
 ENV GO111MODULE=auto
 ENV CGO_ENABLED=0
 
@@ -52,7 +52,11 @@ COPY --from=releaser /out /
 
 FROM alpine:3.24.2@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6 AS runtime-alpine
 RUN apk --update upgrade --no-cache \
-    && apk add --no-cache ca-certificates tzdata
+    && apk add --no-cache ca-certificates tzdata && \
+    addgroup -g 1001 -S wait4x && \
+    adduser -S -s /bin/sh -G wait4x -u 10000 wait4x
+
+USER wait4x
 
 FROM debian:13.7-slim@sha256:a99cfc517144bc59b1978475ec53b46ecabec7e43635402ee5b77cc54cd1b20a AS runtime-debian
 RUN apt-get update \
