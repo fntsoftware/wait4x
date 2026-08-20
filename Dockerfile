@@ -52,7 +52,11 @@ COPY --from=releaser /out /
 
 FROM alpine:3.24.2@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6 AS runtime-alpine
 RUN apk --update upgrade --no-cache \
-    && apk add --no-cache ca-certificates tzdata
+    && apk add --no-cache ca-certificates tzdata && \
+    addgroup -g 1001 -S wait4x && \
+    adduser -S -s /bin/sh -G wait4x -u 10000 wait4x
+
+USER wait4x
 
 FROM debian:13.7-slim@sha256:a99cfc517144bc59b1978475ec53b46ecabec7e43635402ee5b77cc54cd1b20a AS runtime-debian
 RUN apt-get update \
