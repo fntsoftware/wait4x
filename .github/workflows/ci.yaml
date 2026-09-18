@@ -155,7 +155,7 @@ jobs:
       #       type=edge,branch=${{ github.event.repository.default_branch }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
+        uses: docker/setup-buildx-action@594f3bf4285d9ea8dc53c9a0c9c4092420091003 # v4.4.0
         with:
           buildkitd-config-inline: |
             [worker.oci]
@@ -177,7 +177,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build artifacts
-        uses: docker/bake-action@d3418bd7d0e9324001bca92fa8ba175ea7e6dc9b # v7.3.0
+        uses: docker/bake-action@018cb6412ab401ebaa809aa5f85966b74628600f # v7.4.0
         with:
           targets: artifact
           provenance: false
@@ -203,7 +203,7 @@ jobs:
           if-no-files-found: error
 
       - name: Build and push Alpine image
-        uses: docker/bake-action@d3418bd7d0e9324001bca92fa8ba175ea7e6dc9b # v7.3.0
+        uses: docker/bake-action@018cb6412ab401ebaa809aa5f85966b74628600f # v7.4.0
         with:
           targets: image-alpine
           push: ${{ github.ref_name == github.event.repository.default_branch || startsWith(github.ref, 'refs/tags/') }}
@@ -217,7 +217,7 @@ jobs:
             *.args.COMMIT_REF_SLUG=${{ github.ref_name }}
 
       # - name: Build and push Debian image
-      #   uses: docker/bake-action@d3418bd7d0e9324001bca92fa8ba175ea7e6dc9b # v7.3.0
+      #   uses: docker/bake-action@018cb6412ab401ebaa809aa5f85966b74628600f # v7.4.0
       #   with:
       #     targets: image-debian
       #     push: ${{ github.ref_name == github.event.repository.default_branch || startsWith(github.ref, 'refs/tags/') }}
@@ -239,7 +239,7 @@ jobs:
       #     short-description: ${{ github.event.repository.description }}
 
       - name: GitHub Release
-        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3.0.2
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
         with:
           draft: true
