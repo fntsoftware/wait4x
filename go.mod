@@ -30,7 +30,7 @@ require (
 	go.mongodb.org/mongo-driver v1.17.10
 	go.temporal.io/api v1.63.6
 	golang.org/x/net v0.60.0
-	google.golang.org/grpc v1.83.2
+	google.golang.org/grpc v1.84.0
 	mvdan.cc/sh/v3 v3.14.1
 )
 
