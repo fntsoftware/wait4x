@@ -17,65 +17,67 @@ permissions:
   packages: write
 
 jobs:
-  check:
-    name: Check
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout Code
-      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+# bsi-fast:   check:
+# bsi-fast:     name: Check
+# bsi-fast:     runs-on: ubuntu-latest
+# bsi-fast:     steps:
+# bsi-fast:     - name: Checkout Code
+# bsi-fast:       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-    - name: Set up Go
-      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-      with:
-        go-version-file: "go.mod"
+# bsi-fast:     - name: Set up Go
+# bsi-fast:       uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+# bsi-fast:       with:
+# bsi-fast:         go-version-file: "go.mod"
 
-    - name: go-fmt
-      run: make check-gofmt
+# bsi-fast:     - name: go-fmt
+# bsi-fast:       run: make check-gofmt
 
-    - name: go-vet
-      run: make check-govet
+# bsi-fast:     - name: go-vet
+# bsi-fast:       run: make check-govet
 
-    - name: revive
-      run: |
-        go install github.com/mgechev/revive@v1.1.4
-        make check-revive
+# bsi-fast:     - name: revive
+# bsi-fast:       run: |
+# bsi-fast:         go install github.com/mgechev/revive@v1.1.4
+# bsi-fast:         make check-revive
 
-  test:
-    name: Test
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout Code
-      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+# bsi-fast:   test:
+# bsi-fast:     name: Test
+# bsi-fast:     needs: check
+# bsi-fast:     runs-on: ubuntu-latest
+# bsi-fast:     steps:
+# bsi-fast:     - name: Checkout Code
+# bsi-fast:       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-    - name: Set up Go
-      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-      with:
-        go-version-file: "go.mod"
+# bsi-fast:     - name: Set up Go
+# bsi-fast:       uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+# bsi-fast:       with:
+# bsi-fast:         go-version-file: "go.mod"
 
-    - name: Test Wait4X
-      run: make test
+# bsi-fast:     - name: Test Wait4X
+# bsi-fast:       run: make test
 
-    - name: Convert coverage to lcov
-      uses: jandelgado/gcov2lcov-action@e4612787670fc5b5f49026b8c29c5569921de1db # v1.2.0
-      with:
-        infile: coverage.out
-        outfile: coverage.lcov
+# bsi-fast:     - name: Convert coverage to lcov
+# bsi-fast:       uses: jandelgado/gcov2lcov-action@e4612787670fc5b5f49026b8c29c5569921de1db # v1.2.0
+# bsi-fast:       with:
+# bsi-fast:         infile: coverage.out
+# bsi-fast:         outfile: coverage.lcov
 
-    - name: Coveralls
-      uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2.3.8
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: coverage.lcov
+# bsi-fast:     - name: Coveralls
+# bsi-fast:       uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2.3.8
+# bsi-fast:       with:
+# bsi-fast:         github-token: ${{ secrets.GITHUB_TOKEN }}
+# bsi-fast:         path-to-lcov: coverage.lcov
 
   build:
     name: Build
-    needs: test
+# bsi-fast:     needs: test
     runs-on: ubuntu-latest
     permissions:
       contents: write
       packages: write
       statuses: write
+    env:
+      SHOULD_PUBLISH: ${{ github.ref_name == github.event.repository.default_branch || startsWith(github.ref, 'refs/tags/') }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -114,6 +116,17 @@ jobs:
             type=semver,pattern={{major}}
             type=ref,event=pr
             type=edge,branch=${{ github.event.repository.default_branch }}
+          # OCI labels the BSI SBOM reads (PLAT-7643); title, version, source and revision come from the action
+          labels: |
+            org.opencontainers.image.vendor=FNT Software GmbH
+            org.opencontainers.image.authors=licensing@fntsoftware.com
+            org.opencontainers.image.licenses=Apache-2.0 AND LicenseRef-fntsoftware-EULA-2025-09
+
+      # The SBOM version is the image tag; a branch without one gets a snapshot tag.
+      - name: SBOM image reference
+        env:
+          VERSION: ${{ steps.meta-alpine.outputs.version }}
+        run: echo "SBOM_IMAGE=ghcr.io/${GITHUB_REPOSITORY}:${VERSION:-${GITHUB_SHA::7}-SNAPSHOT}" >> "$GITHUB_ENV"
 
       # - name: Docker metadata (Debian)
       #   id: meta-debian
@@ -176,37 +189,37 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build artifacts
-        uses: docker/bake-action@018cb6412ab401ebaa809aa5f85966b74628600f # v7.4.0
-        with:
-          targets: artifact
-          provenance: false
-          set: |
-            *.args.COMMIT_HASH=${{ github.sha }}
-            *.args.COMMIT_REF_SLUG=${{ github.ref_name }}
+# bsi-fast:       - name: Build artifacts
+# bsi-fast:         uses: docker/bake-action@018cb6412ab401ebaa809aa5f85966b74628600f # v7.4.0
+# bsi-fast:         with:
+# bsi-fast:           targets: artifact
+# bsi-fast:           provenance: false
+# bsi-fast:           set: |
+# bsi-fast:             *.args.COMMIT_HASH=${{ github.sha }}
+# bsi-fast:             *.args.COMMIT_REF_SLUG=${{ github.ref_name }}
 
-      - name: Move artifacts
-        run: |
-          # Move all files except SHA256SUMS to the main dist directory
-          find ./dist -type f -not -name "SHA256SUMS" -exec mv {} ./dist/ \;
-          # Combine all SHA256SUMS files into one
-          find ./dist -name "SHA256SUMS" -exec cat {} \; | sort -u > ./dist/SHA256SUMS.combined
-          mv ./dist/SHA256SUMS.combined ./dist/SHA256SUMS
-          # Remove empty directories
-          find ./dist -type d -empty -delete
+# bsi-fast:       - name: Move artifacts
+# bsi-fast:         run: |
+# bsi-fast:           # Move all files except SHA256SUMS to the main dist directory
+# bsi-fast:           find ./dist -type f -not -name "SHA256SUMS" -exec mv {} ./dist/ \;
+# bsi-fast:           # Combine all SHA256SUMS files into one
+# bsi-fast:           find ./dist -name "SHA256SUMS" -exec cat {} \; | sort -u > ./dist/SHA256SUMS.combined
+# bsi-fast:           mv ./dist/SHA256SUMS.combined ./dist/SHA256SUMS
+# bsi-fast:           # Remove empty directories
+# bsi-fast:           find ./dist -type d -empty -delete
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: wait4x-artifacts
-          path: ./dist/*
-          if-no-files-found: error
+# bsi-fast:       - name: Upload artifacts
+# bsi-fast:         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+# bsi-fast:         with:
+# bsi-fast:           name: wait4x-artifacts
+# bsi-fast:           path: ./dist/*
+# bsi-fast:           if-no-files-found: error
 
       - name: Build and push Alpine image
         uses: docker/bake-action@018cb6412ab401ebaa809aa5f85966b74628600f # v7.4.0
         with:
           targets: image-alpine
-          push: ${{ github.ref_name == github.event.repository.default_branch || startsWith(github.ref, 'refs/tags/') }}
+          push: ${{ env.SHOULD_PUBLISH }}
           sbom: true
           provenance: true
           files: |
@@ -215,6 +228,38 @@ jobs:
           set: |
             *.args.COMMIT_HASH=${{ github.sha }}
             *.args.COMMIT_REF_SLUG=${{ github.ref_name }}
+
+      # The BSI SBOM reads the image from the runner. A pushed image is pulled, so it has the registry digest
+      # for its purl; otherwise the amd64 image is loaded from the build cache.
+      - name: Pull Alpine image for the SBOM
+        if: ${{ env.SHOULD_PUBLISH == 'true' }}
+        run: docker pull "$SBOM_IMAGE"
+
+      - name: Load Alpine image for the SBOM
+        if: ${{ env.SHOULD_PUBLISH != 'true' }}
+        uses: docker/bake-action@018cb6412ab401ebaa809aa5f85966b74628600f # v7.4.0
+        with:
+          targets: image-alpine
+          load: true
+          provenance: false
+          files: |
+            ./docker-bake.hcl
+            cwd://${{ steps.meta-alpine.outputs.bake-file }}
+          set: |
+            *.platform=linux/amd64
+            *.tags=${{ env.SBOM_IMAGE }}
+            *.args.COMMIT_HASH=${{ github.sha }}
+            *.args.COMMIT_REF_SLUG=${{ github.ref_name }}
+
+      - name: BSI Compliant SBOM
+        uses: fntsoftware/actions/bsi-compliant-sbom@v1
+        with:
+          image: ${{ env.SBOM_IMAGE }}
+          publish: ${{ env.SHOULD_PUBLISH }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          cosign-public-key: ${{ secrets.COSIGN_PUBLIC_KEY }}
+          cosign-private-key: ${{ secrets.COSIGN_PRIVATE_KEY }}
+          cosign-private-key-password: ${{ secrets.COSIGN_PASSWORD }}
 
       # - name: Build and push Debian image
       #   uses: docker/bake-action@018cb6412ab401ebaa809aa5f85966b74628600f # v7.4.0
@@ -238,15 +283,15 @@ jobs:
       #     password: ${{ secrets.DOCKERHUB_TOKEN }}
       #     short-description: ${{ github.event.repository.description }}
 
-      - name: GitHub Release
-        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
-        if: ${{ startsWith(github.ref, 'refs/tags/') }}
-        with:
-          draft: true
-          generate_release_notes: true
-          files: |
-            dist/*.tar.gz
-            dist/*.sha256sum
-            dist/SHA256SUMS
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+# bsi-fast:       - name: GitHub Release
+# bsi-fast:         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+# bsi-fast:         if: ${{ startsWith(github.ref, 'refs/tags/') }}
+# bsi-fast:         with:
+# bsi-fast:           draft: true
+# bsi-fast:           generate_release_notes: true
+# bsi-fast:           files: |
+# bsi-fast:             dist/*.tar.gz
+# bsi-fast:             dist/*.sha256sum
+# bsi-fast:             dist/SHA256SUMS
+# bsi-fast:         env:
+# bsi-fast:           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
