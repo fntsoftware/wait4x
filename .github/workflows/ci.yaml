@@ -184,7 +184,6 @@ jobs:
           set: |
             *.args.COMMIT_HASH=${{ github.sha }}
             *.args.COMMIT_REF_SLUG=${{ github.ref_name }}
-            *.args.BUILDKIT_CONTEXT_KEEP_GIT_DIR=1
 
       - name: Move artifacts
         run: |
@@ -231,7 +230,6 @@ jobs:
       #     set: |
       #       *.args.COMMIT_HASH=${{ github.sha }}
       #       *.args.COMMIT_REF_SLUG=${{ github.ref_name }}
-      #       *.args.BUILDKIT_CONTEXT_KEEP_GIT_DIR=1
 
       # - name: Docker Hub Description
       #   uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5.0.0
