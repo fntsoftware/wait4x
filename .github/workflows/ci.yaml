@@ -215,6 +215,7 @@ jobs:
           set: |
             *.args.COMMIT_HASH=${{ github.sha }}
             *.args.COMMIT_REF_SLUG=${{ github.ref_name }}
+            *.args.BUILDKIT_CONTEXT_KEEP_GIT_DIR=1
 
       # - name: Build and push Debian image
       #   uses: docker/bake-action@018cb6412ab401ebaa809aa5f85966b74628600f # v7.4.0
