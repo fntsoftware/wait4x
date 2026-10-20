@@ -28,7 +28,7 @@ require (
 	github.com/tidwall/gjson v1.19.0
 	github.com/tonglil/buflogr v1.1.1
 	go.mongodb.org/mongo-driver v1.17.10
-	go.temporal.io/api v1.63.6
+	go.temporal.io/api v1.64.0
 	golang.org/x/net v0.60.0
 	google.golang.org/grpc v1.83.2
 	mvdan.cc/sh/v3 v3.14.1
